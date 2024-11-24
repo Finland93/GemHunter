@@ -1,6 +1,5 @@
-![GemHunter Tool Image](https://www.tradingview.com/x/1Uuu138k/)
-
 ## **GemHunter Tool: Your Complete Trading Companion**
+![GemHunter Tool Image](https://www.tradingview.com/x/1Uuu138k/)
 
 The GemHunter Tool is a comprehensive trading assistant designed to enhance your trading strategy by combining advanced technical analysis with clear, actionable insights. Below is a detailed guide to the various metrics and visual indicators provided by the tool.
 
@@ -54,10 +53,8 @@ To use the GemHunter Tool, simply add it to your chart, and it will automaticall
 Once the tool is applied, monitor the visual indicators. Look for a green or red background, which signals momentum shifts, and keep an eye out for upward (▲) or downward (▼) arrows that indicate trend changes. Additionally, refer to the trend strength tables. The bottom-left table will show the average trend duration, while the bottom-right table will provide the current trend status, allowing you to assess the market conditions. Lastly, use the top-right table to gauge the strength of both short-term (90 days) and long-term (365 days) trends, giving you a comprehensive view of the market’s movement.
 
 ---
-
-![MACD Integration Image](https://www.tradingview.com/x/z1pRSsOU/)
-
 ## **MACD Integration for GemHunter**
+![MACD Integration Image](https://www.tradingview.com/x/z1pRSsOU/)
 
 Take your trading strategy to the next level with MACD Integration for GemHunter! This advanced version of the Moving Average Convergence Divergence (MACD) indicator is designed to seamlessly complement our upcoming GemHunter script, delivering unparalleled insights for trend and momentum analysis.
 
