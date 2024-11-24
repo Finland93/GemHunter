@@ -1,11 +1,11 @@
 ## **GemHunter Tool: Your Complete Trading Companion**
 ![GemHunter Tool Image](https://www.tradingview.com/x/VlBbsexD/)
 
-The GemHunter Tool is a comprehensive trading assistant designed to enhance your trading strategy by combining advanced technical analysis with clear, actionable insights. Below is a detailed guide to the various metrics and visual indicators provided by the tool.
+The GemHunter Tool for TradingView is a comprehensive trading assistant designed to enhance your trading strategy by combining advanced technical analysis with clear, actionable insights. Below is a detailed guide to the various metrics and visual indicators provided by the tool.
 
 ### **Seamless Integration with MACD Integration**
 
-While powerful on its own, the GemHunter Tool truly shines when paired with the MACD Integration for GemHunter, enabling you to harness the full potential of trend momentum and divergence detection. Together, they form a robust ecosystem for professional-grade trading.
+While powerful on its own, the GemHunter Tool for TradingView truly shines when paired with the MACD Integration for GemHunter, enabling you to harness the full potential of trend momentum and divergence detection. Together, they form a robust ecosystem for professional-grade trading.
 
 ### **Features & Indicators**
 
@@ -14,7 +14,8 @@ While powerful on its own, the GemHunter Tool truly shines when paired with the 
 
    **Precision Control:** You can adjust the precision with which these lines are identified, allowing for fine-tuned analysis based on your preferred trading style.
 
-2. The background color on your chart changes dynamically to reflect the momentum of the market, as determined by a MACD (Moving Average Convergence Divergence) crossover strategy:
+2. **Background Color Change Based on Market Momentum:**
+   The background color on your chart changes dynamically to reflect the momentum of the market, as determined by a MACD (Moving Average Convergence Divergence) crossover strategy:
 
    - **Green Background:** Indicates a bullish trend or upward momentum when the faster MACD line crosses above the slower MACD line.
    - **Red Background:** Indicates a bearish trend or downward momentum when the faster MACD line crosses below the slower MACD line.
@@ -52,7 +53,6 @@ While powerful on its own, the GemHunter Tool truly shines when paired with the 
    - **Mid-term EMAs** (50D, 200D, 1W, 1M)
    - **Long-term EMAs** (365-day EMA and 4-hour chart)  
 
-
 ### **How to Use:**
 
 To use the GemHunter Tool, simply add it to your chart [copy & paste pine script here](https://github.com/Finland93/GemHunter/blob/main/GemHunter/gemhunter.pine), and it will automatically plot key support and resistance lines, trend arrows, and trend strength tables. You can customize the tool by adjusting parameters such as Fast Length, Slow Length, and Signal Length to tailor the indicators to your preferred trading style.
@@ -60,6 +60,7 @@ To use the GemHunter Tool, simply add it to your chart [copy & paste pine script
 Once the tool is applied, monitor the visual indicators. Look for a green or red background, which signals momentum shifts, and keep an eye out for upward (▲) or downward (▼) arrows that indicate trend changes. Additionally, refer to the trend strength tables. The bottom-left table will show the average trend duration, while the bottom-right table will provide the current trend status, allowing you to assess the market conditions. Lastly, use the top-right table to gauge the strength of both short-term (90 days) and long-term (365 days) trends, giving you a comprehensive view of the market’s movement.
 
 ---
+
 ## **MACD Integration for GemHunter**
 ![MACD Integration Image](https://www.tradingview.com/x/bldjXEoy/)
 
@@ -84,12 +85,26 @@ The MACD Integration for GemHunter is built specifically to enhance the function
 
 ### **How to Use:**
 
-To make the most of the MACD Integration for GemHunter [copy & paste pine script here](https://github.com/Finland93/GemHunter/blob/main/GemHunter/MACD-integration.pine), begin by adjusting the input parameters to align with your trading style and strategy. Use the customizable settings to tailor the indicator’s sensitivity and visualization to your specific needs. As you monitor your charts, pay attention to the divergence signals, MACD crossovers, and the trend status label, which provide actionable insights into market dynamics. For added convenience, set up alerts to stay informed about critical market movements, ensuring you never miss an important signal. Finally, combine this tool with the GemHunter tool to create a complete trading system, unlocking powerful insights and identifying profitable opportunities with precision.
+To make the most of the MACD Integration for GemHunter [copy & paste pine script here](https://github.com/Finland93/GemHunter/blob/main/GemHunter/MACD-integration.pine), begin by adjusting the input parameters to align with your trading style and strategy. Use the customizable settings to tailor the indicator’s sensitivity and visualization to your specific needs. As you monitor your charts, pay attention to the divergence signals, MACD crossovers, and the trend status label, which provide actionable insights into market dynamics. For added convenience, set up alerts to stay informed about critical market movements, ensuring you never miss an important signal. Finally, combine this tool with the GemHunter tool  for TradingView to create a complete trading system, unlocking powerful insights and identifying profitable opportunities with precision.
 
 ---
+
+## **Tutorials**
+
+Here you will find tutorials and explanations for the various indicators used in the GemHunter Tool for TradingView. For in-depth knowledge on each concept, we have linked to Investopedia articles that explain the key terms.
+
+- **[Support and Resistance](https://www.investopedia.com/terms/s/support.asp):** Learn how support and resistance levels are identified and their importance in trading.
+- **[MACD (Moving Average Convergence Divergence)](https://www.investopedia.com/terms/m/macd.asp):** A guide to understanding the MACD indicator and its role in trend analysis.
+- **[Exponential Moving Average (EMA)](https://www.investopedia.com/terms/e/ema.asp):** Explore how EMAs are used to determine market trends and potential reversals.
+- **[Ichimoku Cloud](https://www.investopedia.com/terms/i/ichimoku-cloud.asp):** A comprehensive look at the Ichimoku Cloud and how it helps in identifying support, resistance, and trends.
+- **[Volume](https://www.investopedia.com/terms/v/volume.asp):** Understand the role of trading volume and how it can confirm or contradict price movements.
+- **[Divergence in Trading](https://www.investopedia.com/terms/d/divergence.asp):** Learn how divergence between price and indicators signals potential trend changes.
+
+---
+
 ## **Disclaimer**
 
 > **Disclaimer:**  
-> The information provided by the GemHunter Tool and its associated features is for educational and informational purposes only. We do not offer any financial, investment, or trading advice. Trading and investing involve substantial risk, and you should only trade with money you can afford to lose.  
+> The information provided by the GemHunter Tool and its associated features is for educational and informational purposes only. We do not offer any financial, investment, or trading advice. Trading and investing involve substantial risk, and you should only trade with money you can afford to lose.
+> 
 > We are not responsible for any financial losses that may occur as a result of using this tool. You are solely responsible for any trading decisions and actions you take based on the data provided by the GemHunter Tool. Please conduct thorough research or consult a qualified financial advisor before making any financial decisions.
-
