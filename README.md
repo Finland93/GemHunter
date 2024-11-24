@@ -46,6 +46,13 @@ While powerful on its own, the GemHunter Tool truly shines when paired with the 
    - **Black:** Neutral or weak trend
    - **Red:** Strong bearish trend
 
+7. **EMA Indicators:** This tool also includes multiple EMAs across various timeframes, providing a comprehensive view of market trends. These EMAs are used to determine trend strength and potential reversal points, with each line offering a unique perspective based on the timeframe it covers.
+
+   - **Short-term EMAs** (8D / 150h, 21D / 365h)
+   - **Mid-term EMAs** (50D, 200D, 1W, 1M)
+   - **Long-term EMAs** (365-day EMA and 4-hour chart)  
+
+
 ### **How to Use:**
 
 To use the GemHunter Tool, simply add it to your chart [copy & paste pine script here](https://github.com/Finland93/GemHunter/blob/main/GemHunter/gemhunter.pine), and it will automatically plot key support and resistance lines, trend arrows, and trend strength tables. You can customize the tool by adjusting parameters such as Fast Length, Slow Length, and Signal Length to tailor the indicators to your preferred trading style.
