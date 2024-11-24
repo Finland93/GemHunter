@@ -81,7 +81,7 @@ This tool is perfect for traders who value precision and flexibility. Whether yo
 
 ### **Seamless Integration with GemHunter**
 
-The MACD Integration for GemHunter is built specifically to enhance the functionality of the GemHunter script. Together, they form a complete solution for uncovering hidden trading opportunities in any market. Stay tuned for the release of GemHunter and unlock the full potential of this powerful combination!
+The MACD Integration for GemHunter is built specifically to enhance the functionality of the GemHunter script. Together, they form a complete solution for uncovering hidden trading opportunities in any market. 
 
 ### **How to Use:**
 
