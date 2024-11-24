@@ -1,4 +1,4 @@
-## **GemHunter Tool: Your Complete Trading Companion**
+## **GemHunter Tool for TradingView - Always free**
 ![GemHunter Tool Image](https://www.tradingview.com/x/VlBbsexD/)
 
 The GemHunter Tool for TradingView is a comprehensive trading assistant designed to enhance your trading strategy by combining advanced technical analysis with clear, actionable insights. Below is a detailed guide to the various metrics and visual indicators provided by the tool.
