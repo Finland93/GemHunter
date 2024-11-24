@@ -104,7 +104,6 @@ Here you will find tutorials and explanations for the various indicators used in
 
 ## **Disclaimer**
 
-> **Disclaimer:**  
 > The information provided by the GemHunter Tool and its associated features is for educational and informational purposes only. We do not offer any financial, investment, or trading advice. Trading and investing involve substantial risk, and you should only trade with money you can afford to lose.
 > 
 > We are not responsible for any financial losses that may occur as a result of using this tool. You are solely responsible for any trading decisions and actions you take based on the data provided by the GemHunter Tool. Please conduct thorough research or consult a qualified financial advisor before making any financial decisions.
