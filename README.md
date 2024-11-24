@@ -48,7 +48,7 @@ While powerful on its own, the GemHunter Tool truly shines when paired with the 
 
 ### **How to Use:**
 
-To use the GemHunter Tool, simply add it to your chart, and it will automatically plot key support and resistance lines, trend arrows, and trend strength tables. You can customize the tool by adjusting parameters such as Fast Length, Slow Length, and Signal Length to tailor the indicators to your preferred trading style.
+To use the GemHunter Tool, simply add it to your chart [copy & paste pine script here](https://github.com/Finland93/GemHunter/blob/main/GemHunter/gemhunter.pine), and it will automatically plot key support and resistance lines, trend arrows, and trend strength tables. You can customize the tool by adjusting parameters such as Fast Length, Slow Length, and Signal Length to tailor the indicators to your preferred trading style.
 
 Once the tool is applied, monitor the visual indicators. Look for a green or red background, which signals momentum shifts, and keep an eye out for upward (▲) or downward (▼) arrows that indicate trend changes. Additionally, refer to the trend strength tables. The bottom-left table will show the average trend duration, while the bottom-right table will provide the current trend status, allowing you to assess the market conditions. Lastly, use the top-right table to gauge the strength of both short-term (90 days) and long-term (365 days) trends, giving you a comprehensive view of the market’s movement.
 
@@ -77,7 +77,7 @@ The MACD Integration for GemHunter is built specifically to enhance the function
 
 ### **How to Use:**
 
-To make the most of the MACD Integration for GemHunter, begin by adjusting the input parameters to align with your trading style and strategy. Use the customizable settings to tailor the indicator’s sensitivity and visualization to your specific needs. As you monitor your charts, pay attention to the divergence signals, MACD crossovers, and the trend status label, which provide actionable insights into market dynamics. For added convenience, set up alerts to stay informed about critical market movements, ensuring you never miss an important signal. Finally, combine this tool with the upcoming GemHunter tool to create a complete trading system, unlocking powerful insights and identifying profitable opportunities with precision.
+To make the most of the MACD Integration for GemHunter [copy & paste pine script here](https://github.com/Finland93/GemHunter/blob/main/GemHunter/MACD-integration.pine), begin by adjusting the input parameters to align with your trading style and strategy. Use the customizable settings to tailor the indicator’s sensitivity and visualization to your specific needs. As you monitor your charts, pay attention to the divergence signals, MACD crossovers, and the trend status label, which provide actionable insights into market dynamics. For added convenience, set up alerts to stay informed about critical market movements, ensuring you never miss an important signal. Finally, combine this tool with the upcoming GemHunter tool to create a complete trading system, unlocking powerful insights and identifying profitable opportunities with precision.
 
 ---
 ## **Disclaimer**
