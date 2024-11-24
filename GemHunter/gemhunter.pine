@@ -170,3 +170,101 @@ table.cell(spt_SL_trend_table, 0, 0, "Long:", text_color=color.white, bgcolor=co
 table.cell(spt_SL_trend_table, 0, 1, spt_SL_long_strength == 2 ? "Bullish" : spt_SL_long_strength == 1 ? "Bullish" : spt_SL_long_strength == 0 ? "Neutral" : spt_SL_long_strength == -1 ? "Bearish" : "Bearish", text_color=spt_SL_long_color, bgcolor=color.white)
 table.cell(spt_SL_trend_table, 1, 0, "Short:", text_color=color.white, bgcolor=color.blue)
 table.cell(spt_SL_trend_table, 1, 1, spt_SL_short_strength == 2 ? "Bullish" : spt_SL_short_strength == 1 ? "Bullish" : spt_SL_short_strength == 0 ? "Neutral" : spt_SL_short_strength == -1 ? "Bearish" : "Bearish", text_color=spt_SL_short_color, bgcolor=color.white)
+
+
+// === Short/Long term trend ===
+spt_LINE_1m = 1440    
+spt_LINE_5m = 288     
+spt_LINE_1h1 = 1200   
+spt_LINE_1h2 = 4800   
+spt_LINE_1hNF1 = 150  
+spt_LINE_1hNF2 = 365  
+spt_LINE_4h1 = 300   
+spt_LINE_4h2 = 1200   
+spt_LINE_1D1 = 50     
+spt_LINE_1D2 = 200    
+spt_LINE_1DNF1 = 8    
+spt_LINE_1DNF2 = 21   
+spt_LINE_1W = 52     
+spt_LINE_1M = 84     
+ema_src = close
+// Defining the EMAs that will show up on different time frames
+var int spt_LINE_ema_length_1 = na
+if timeframe.isintraday and timeframe.multiplier == 1
+    spt_LINE_ema_length_1 := 1
+else if timeframe.isintraday and timeframe.multiplier == 5
+    spt_LINE_ema_length_1 := 1
+else if timeframe.isintraday and timeframe.multiplier == 60
+    spt_LINE_ema_length_1 := spt_LINE_1hNF1
+else if timeframe.isintraday and timeframe.multiplier == 240
+    spt_LINE_ema_length_1 := 1
+else if timeframe.isdaily
+    spt_LINE_ema_length_1 := spt_LINE_1DNF1
+else if timeframe.isweekly
+    spt_LINE_ema_length_1 := 1
+else if timeframe.ismonthly
+    spt_LINE_ema_length_1 := 1
+else
+    spt_LINE_ema_length_1 := 1
+var int spt_LINE_ema_length_2 = na
+if timeframe.isintraday and timeframe.multiplier == 1
+    spt_LINE_ema_length_2 := 1
+else if timeframe.isintraday and timeframe.multiplier == 5
+    spt_LINE_ema_length_2 := 1
+else if timeframe.isintraday and timeframe.multiplier == 60
+    spt_LINE_ema_length_2 := spt_LINE_1hNF2
+else if timeframe.isintraday and timeframe.multiplier == 240
+    spt_LINE_ema_length_2 := 1
+else if timeframe.isdaily
+    spt_LINE_ema_length_2 := spt_LINE_1DNF2
+else if timeframe.isweekly
+    spt_LINE_ema_length_2 := 1
+else if timeframe.ismonthly
+    spt_LINE_ema_length_2 := 1
+else
+    spt_LINE_ema_length_2 := 1
+var int spt_LINE_ema_length_3 = na
+if timeframe.isintraday and timeframe.multiplier == 1
+    spt_LINE_ema_length_3 := spt_LINE_1m
+else if timeframe.isintraday and timeframe.multiplier == 5
+    spt_LINE_ema_length_3 := spt_LINE_5m
+else if timeframe.isintraday and timeframe.multiplier == 60
+    spt_LINE_ema_length_3 := 1
+else if timeframe.isintraday and timeframe.multiplier == 240
+    spt_LINE_ema_length_3 := spt_LINE_4h1
+else if timeframe.isdaily
+    spt_LINE_ema_length_3 := spt_LINE_1D1
+else if timeframe.isweekly
+    spt_LINE_ema_length_3 := spt_LINE_1W
+else if timeframe.ismonthly
+    spt_LINE_ema_length_3 := spt_LINE_1M
+else
+    spt_LINE_ema_length_3 := 1
+
+var int spt_LINE_ema_length_4 = na
+if timeframe.isintraday and timeframe.multiplier == 1
+    spt_LINE_ema_length_4 := 1
+else if timeframe.isintraday and timeframe.multiplier == 5
+    spt_LINE_ema_length_4 := 1
+else if timeframe.isintraday and timeframe.multiplier == 60
+    spt_LINE_ema_length_4 := 1
+else if timeframe.isintraday and timeframe.multiplier == 240
+    spt_LINE_ema_length_4 := spt_LINE_4h2
+else if timeframe.isdaily
+    spt_LINE_ema_length_4 := spt_LINE_1D2
+else if timeframe.isweekly
+    spt_LINE_ema_length_4 := 1
+else if timeframe.ismonthly
+    spt_LINE_ema_length_4 := 1
+else
+    spt_LINE_ema_length_4 := 1
+plot(spt_LINE_ema_length_1 == 1 ? na : ta.ema(ema_src, spt_LINE_ema_length_1), title="8D / 150h", style=plot.style_line, linewidth=2, color=color.new(#42BDA8, 50))
+plot(spt_LINE_ema_length_2 == 1 ? na : ta.ema(ema_src, spt_LINE_ema_length_2), title="21D / 365h", style=plot.style_line, linewidth=3, color=color.new(#FFEE58, 40))
+plot(spt_LINE_ema_length_3 == 1 ? na : ta.ema(ema_src, spt_LINE_ema_length_3), title="1D / 50D / 52W / 7Y", style=plot.style_circles, linewidth=1, color=color.new(#26C6DA, 5))
+plot(spt_LINE_ema_length_4 == 1 ? na : ta.ema(ema_src, spt_LINE_ema_length_4), title="200D", style=plot.style_circles, linewidth=1, color=color.new(#EC407A, 5))
+var table SPT_EMA = table.new(position.middle_left, 1, 5)
+table.cell(SPT_EMA, 0, 0, "EMA LINES:", bgcolor=color.white, text_color=color.black)
+table.cell(SPT_EMA, 0, 1, "8D / 150h", bgcolor=color.new(#42BDA8, 50), text_color=color.white)
+table.cell(SPT_EMA, 0, 2, "21D / 365h", bgcolor=color.new(#FFEE58, 40), text_color=color.white)
+table.cell(SPT_EMA, 0, 3, "1D / 50D / 52W / 7Y", bgcolor=color.new(#26C6DA, 5), text_color=color.white)
+table.cell(SPT_EMA, 0, 4, "200D", bgcolor=color.new(#EC407A, 5), text_color=color.white)
