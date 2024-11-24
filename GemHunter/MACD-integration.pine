@@ -1,0 +1,48 @@
+//@version=6
+indicator(title="MACD Integration for GemHunter", shorttitle="MACD for GemHunter", overlay=false)
+
+source = input.source(close, title="Source")
+fastLength = input.int(12, minval=1, title="Fast Length")
+slowLength = input.int(26, minval=1, title="Slow Length")
+signalLength = input.int(9, minval=1, title="Signal Length")
+useVolume = input.bool(true, title="Incorporate Volume in MACD Calculation")
+showHist = input.bool(true, title="Show Histogram?")
+showCross = input.bool(true, title="Show MACD Cross Signals?")
+showDivergence = input.bool(true, title="Show Divergence Signals?")
+mtfTimeframe = input.timeframe("", title="Multi-Timeframe (MTF) Timeframe")
+volumeMultiplier = input.float(1.0, title="Volume Multiplier")
+tema(src, length) =>
+    ema1 = ta.ema(src, length)
+    ema2 = ta.ema(ema1, length)
+    ema3 = ta.ema(ema2, length)
+    3 * (ema1 - ema2) + ema3
+fastMA = tema(source, fastLength)
+slowMA = tema(source, slowLength)
+macd = fastMA - slowMA
+signal = ta.ema(macd, signalLength) // EMA is more common for signal smoothing
+hist = macd - signal
+volWeightedMACD = useVolume ? (macd * volume * volumeMultiplier) / ta.sma(volume, 20) : macd
+mtfMacd = request.security(syminfo.tickerid, mtfTimeframe, macd)
+mtfSignal = request.security(syminfo.tickerid, mtfTimeframe, signal)
+macdCrossOver = ta.crossover(volWeightedMACD, signal)
+macdCrossUnder = ta.crossunder(volWeightedMACD, signal)
+priceHigh = high
+priceLow = low
+bullishDiv = showDivergence and priceLow < priceLow[1] and volWeightedMACD > volWeightedMACD[1]
+bearishDiv = showDivergence and priceHigh > priceHigh[1] and volWeightedMACD < volWeightedMACD[1]
+plot(volWeightedMACD, title="MACD", color=color.purple, linewidth=2)
+plot(signal, title="Signal Line", color=color.blue, linewidth=2)
+plot(showHist ? hist : na, title="Histogram", color=hist >= 0 ? color.green : color.red, style=plot.style_histogram, linewidth=2)
+plot(showCross and macdCrossOver ? volWeightedMACD : na, title="Cross Over", color=color.green, style=plot.style_circles, linewidth=3)
+plot(showCross and macdCrossUnder ? volWeightedMACD : na, title="Cross Under", color=color.red, style=plot.style_circles, linewidth=3)
+hline(0, title="Zero Line", color=color.gray, linewidth=1)
+alertcondition(macdCrossOver and ta.crossover(mtfMacd, mtfSignal), title="MACD Cross Over with MTF Confirmation", message="MACD crossed over the Signal line with MTF confirmation!")
+alertcondition(macdCrossUnder and ta.crossunder(mtfMacd, mtfSignal), title="MACD Cross Under with MTF Confirmation", message="MACD crossed under the Signal line with MTF confirmation!")
+var string currentTrend = "Neutral"
+if macdCrossOver and ta.crossover(mtfMacd, mtfSignal)
+    currentTrend := "Uptrend"
+if macdCrossUnder and ta.crossunder(mtfMacd, mtfSignal)
+    currentTrend := "Downtrend"
+var table trendStatusTable = table.new(position.bottom_right, 1, 1)
+if barstate.islast
+    table.cell(trendStatusTable, 0, 0, currentTrend, text_size=size.normal, text_color=color.white, bgcolor=currentTrend == "Uptrend" ? color.green : (currentTrend == "Downtrend" ? color.red : color.gray))
