@@ -81,3 +81,11 @@ The MACD Integration for GemHunter is built specifically to enhance the function
 ### **How to Use:**
 
 To make the most of the MACD Integration for GemHunter, begin by adjusting the input parameters to align with your trading style and strategy. Use the customizable settings to tailor the indicator’s sensitivity and visualization to your specific needs. As you monitor your charts, pay attention to the divergence signals, MACD crossovers, and the trend status label, which provide actionable insights into market dynamics. For added convenience, set up alerts to stay informed about critical market movements, ensuring you never miss an important signal. Finally, combine this tool with the upcoming GemHunter tool to create a complete trading system, unlocking powerful insights and identifying profitable opportunities with precision.
+
+---
+## **Disclaimer**
+
+> **Disclaimer:**  
+> The information provided by the GemHunter Tool and its associated features is for educational and informational purposes only. We do not offer any financial, investment, or trading advice. Trading and investing involve substantial risk, and you should only trade with money you can afford to lose.  
+> We are not responsible for any financial losses that may occur as a result of using this tool. You are solely responsible for any trading decisions and actions you take based on the data provided by the GemHunter Tool. Please conduct thorough research or consult a qualified financial advisor before making any financial decisions.
+
