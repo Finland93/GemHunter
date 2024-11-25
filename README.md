@@ -17,8 +17,9 @@ While powerful on its own, the GemHunter Tool for TradingView truly shines when 
 2. **Background Color Change Based on Market Momentum:**
    The background color on your chart changes dynamically to reflect the momentum of the market, as determined by a MACD (Moving Average Convergence Divergence) crossover strategy:
 
-   - **Green Background:** Indicates a bullish trend or upward momentum when the faster MACD line crosses above the slower MACD line.
-   - **Red Background:** Indicates a bearish trend or downward momentum when the faster MACD line crosses below the slower MACD line.
+   - **Green Background:** Represents a bullish trend when the faster MACD line is above the signal line, and the MACD line itself is positive.
+   - **Red Background:** Represents a bearish trend when the faster MACD line is below the signal line, and the MACD line itself is negative.
+   - **Gray Background:** Represents a neutral trend when neither the bullish nor bearish conditions are met.
 
 3. **Trend Change Arrows:** These arrows are plotted on the chart to visually indicate a shift in market direction:
    - **Upward Green Arrow (▲):** Appears when the tool detects the beginning of an Uptrend (price above certain moving averages, such as the Ichimoku spans and EMA).
