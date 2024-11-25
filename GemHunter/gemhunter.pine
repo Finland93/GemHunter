@@ -1,5 +1,5 @@
 //@version=6
-indicator("SPT Tool", shorttitle="SPT Tool", overlay=true)
+indicator("GemHunter tool", shorttitle="GemHunter", overlay=true)
 
 // === INPUT PARAMETERS ===
 source = close
