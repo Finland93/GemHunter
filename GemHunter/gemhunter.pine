@@ -1,24 +1,24 @@
 //@version=6
-indicator("GemHunter Tool", shorttitle="GemHunter", overlay=true)
+indicator("SPT Tool", shorttitle="SPT Tool", overlay=true)
 
 // === INPUT PARAMETERS ===
 source = close
 fastLength = input.int(12, minval=1, title="Fast Length")
 slowLength = input.int(26, minval=1, title="Slow Length")
 signalLength = input.int(9, minval=1, title="Signal Length")
-
-// === SUPPORT & RESISTANCE LINES SECTION ===
 spt_line_base_length = 240
 spt_line_buffer_multiplier = 0.01
 spt_line_buffer_high = ta.atr(10) * spt_line_buffer_multiplier
 spt_line_buffer_low = ta.atr(10) * spt_line_buffer_multiplier
+
+// === SUPPORT & RESISTANCE LINES SECTION ===
 spt_line_get_dynamic_length() =>
     timeframe_multiplier = timeframe.multiplier
     scale_factor = (timeframe.isintraday) ? (timeframe_multiplier / 1) : 1
     sr_length = spt_line_base_length * scale_factor
     sr_length
 spt_line_sr_length = spt_line_get_dynamic_length()
-spt_line_sr_length := math.min(spt_line_sr_length, 240)  // Limit to a max of 240 bars
+spt_line_sr_length := math.min(spt_line_sr_length, 240)
 spt_line_is_swing_high(idx, length) =>
     high[idx] == ta.highest(high, length)
 spt_line_is_swing_low(idx, length) =>
@@ -50,28 +50,27 @@ if (bar_index >= spt_line_sr_length)
 spt_line_precision = 5
 spt_line_support_text = "Support: " + str.tostring(spt_line_locked_support, "#." + str.repeat("0", spt_line_precision))
 spt_line_resistance_text = "Resistance: " + str.tostring(spt_line_locked_resistance, "#." + str.repeat("0", spt_line_precision))
-if (bar_index == ta.highest(bar_index, 1))  // Place labels only on the most recent bar
+if (bar_index == ta.highest(bar_index, 1)) 
     if not na(spt_line_locked_support)
         spt_line_support_label := label.new(x=bar_index, y=spt_line_locked_support, text=spt_line_support_text, color=color.orange, textcolor=color.white, style=label.style_label_left, size=size.normal)
     if not na(spt_line_locked_resistance)
         spt_line_resistance_label := label.new(x=bar_index, y=spt_line_locked_resistance, text=spt_line_resistance_text, color=color.purple, textcolor=color.white, style=label.style_label_left, size=size.normal)
 
 // === BACKGROUND COLOR SECTION ===
-spt_color_tema(src, length) =>
-    ema1 = ta.ema(src, length)
-    ema2 = ta.ema(ema1, length)
-    ema3 = ta.ema(ema2, length)
-    3 * (ema1 - ema2) + ema3
-spt_fastMA = spt_color_tema(source, fastLength)
-spt_slowMA = spt_color_tema(source, slowLength)
-spt_macd = spt_fastMA - spt_slowMA
-spt_signal = ta.sma(spt_macd, signalLength)
-var color spt_bg_color = na  
-if ta.crossover(spt_macd, spt_signal)
-    spt_bg_color := color.new(color.green, 75)
-else if ta.crossunder(spt_macd, spt_signal)
-    spt_bg_color := color.new(color.red, 75)
-bgcolor(spt_bg_color)
+macdLine = ta.ema(source, fastLength) - ta.ema(source, slowLength)
+signalLine = ta.ema(macdLine, signalLength)
+histogram = macdLine - signalLine
+isBullishMACD = macdLine > signalLine
+isBearishMACD = macdLine < signalLine
+trendBullish = isBullishMACD and macdLine > 0
+trendBearish = isBearishMACD and macdLine < 0
+trendNeutral = not trendBullish and not trendBearish
+bgColorBull = color.new(color.green, 75)
+bgColorBear = color.new(color.red, 75)
+bgColorNeutral = color.new(color.gray, 75)
+bgcolor(trendBullish ? bgColorBull : na, title="Bullish Background")
+bgcolor(trendBearish ? bgColorBear : na, title="Bearish Background")
+bgcolor(trendNeutral ? bgColorNeutral : na, title="Neutral Background")
 
 // === Trend Conditions ===
 spt_trend_current_close = request.security(syminfo.tickerid, timeframe.period, close)
@@ -81,7 +80,7 @@ spt_trend_senkou_span_a = request.security(syminfo.tickerid, timeframe.period, (
 spt_trend_senkou_span_b = request.security(syminfo.tickerid, timeframe.period, (ta.highest(high, 52) + ta.lowest(low, 52)) / 2)
 spt_trend_uptrend = spt_trend_current_close > spt_trend_senkou_span_a and spt_trend_current_close > spt_trend_senkou_span_b
 spt_trend_downtrend = spt_trend_current_close < spt_trend_senkou_span_a and spt_trend_current_close < spt_trend_senkou_span_b
-var string spt_trend_current_trend = "Neutral"
+var string spt_trend_current_trend = "Neutral" 
 var int trend_start_bar = na
 var int uptrend_duration = 0
 var int downtrend_duration = 0
@@ -89,43 +88,41 @@ var int uptrend_count = 0
 var int downtrend_count = 0
 var int consecutive_uptrend_bars = 0
 var int consecutive_downtrend_bars = 0
-confirmation_threshold = 4 
+confirmation_threshold = 4  
 if spt_trend_uptrend
     consecutive_uptrend_bars := consecutive_uptrend_bars + 1
-    consecutive_downtrend_bars := 0  // Reset downtrend counter
+    consecutive_downtrend_bars := 0 
     if spt_trend_current_trend != "Uptrend" and consecutive_uptrend_bars >= confirmation_threshold
         spt_trend_current_trend := "Uptrend"
-        trend_start_bar := bar_index
-        uptrend_duration := 0
-        consecutive_uptrend_bars := 0  // Reset after confirming
+        trend_start_bar := bar_index  
+        uptrend_duration := 0  
+        consecutive_uptrend_bars := 0  
     else
-        consecutive_uptrend_bars := math.min(consecutive_uptrend_bars, confirmation_threshold) // Cap to avoid excessive count
+        consecutive_uptrend_bars := math.min(consecutive_uptrend_bars, confirmation_threshold) 
 if spt_trend_downtrend
     consecutive_downtrend_bars := consecutive_downtrend_bars + 1
-    consecutive_uptrend_bars := 0  // Reset uptrend counter
+    consecutive_uptrend_bars := 0  
     if spt_trend_current_trend != "Downtrend" and consecutive_downtrend_bars >= confirmation_threshold
         spt_trend_current_trend := "Downtrend"
-        trend_start_bar := bar_index
-        downtrend_duration := 0
-        consecutive_downtrend_bars := 0  // Reset after confirming
+        trend_start_bar := bar_index 
+        downtrend_duration := 0  
+        consecutive_downtrend_bars := 0 
     else
-        consecutive_downtrend_bars := math.min(consecutive_downtrend_bars, confirmation_threshold) // Cap to avoid excessive count
+        consecutive_downtrend_bars := math.min(consecutive_downtrend_bars, confirmation_threshold) 
 if spt_trend_current_trend == "Uptrend"
     uptrend_duration := bar_index - trend_start_bar
 if spt_trend_current_trend == "Downtrend"
     downtrend_duration := bar_index - trend_start_bar
-max_bars = 365
+max_bars = 365 
 var float avg_uptrend_bars = na
 var float avg_downtrend_bars = na
 if bar_index >= max_bars
     if spt_trend_current_trend == "Uptrend"
         uptrend_count := uptrend_count + 1
-        avg_uptrend_bars := na(avg_uptrend_bars) ? uptrend_duration : (avg_uptrend_bars * (uptrend_count - 1) + uptrend_duration) / uptrend_count
+        avg_uptrend_bars := na(avg_uptrend_bars) ? uptrend_duration : (avg_uptrend_bars * (uptrend_count - 1) + uptrend_duration) / uptrend_count 
     if spt_trend_current_trend == "Downtrend"
         downtrend_count := downtrend_count + 1
-        avg_downtrend_bars := na(avg_downtrend_bars) ? downtrend_duration : (avg_downtrend_bars * (downtrend_count - 1) + downtrend_duration) / downtrend_count
-
-// === Trend Change Detection ===
+        avg_downtrend_bars := na(avg_downtrend_bars) ? downtrend_duration : (avg_downtrend_bars * (downtrend_count - 1) + downtrend_duration) / downtrend_count  
 var string previous_trend = na
 trend_changed = (spt_trend_current_trend != previous_trend)
 previous_trend := spt_trend_current_trend
@@ -143,18 +140,17 @@ var table spt_trend_table_left = table.new(position.bottom_left, 2, 2)
 if barstate.islast and bar_index >= max_bars    
     table.cell(spt_trend_table_left, 0, 0, "AVG UP:", text_size=size.normal, text_color=color.white, bgcolor=color.blue)
     table.cell(spt_trend_table_left, 0, 1, "AVG DOWN:", text_size=size.normal, text_color=color.white, bgcolor=color.blue)
-    // Display the averages rounded to integers
     table.cell(spt_trend_table_left, 1, 0, str.tostring(math.round(avg_uptrend_bars)), text_size=size.normal, text_color=color.green, bgcolor=color.white)
     table.cell(spt_trend_table_left, 1, 1, str.tostring(math.round(avg_downtrend_bars)), text_size=size.normal, text_color=color.red, bgcolor=color.white)
 
 // === Short/Long term trend ===
-spt_SL_short_term_days = 90  // 3 months
-spt_SL_long_term_days = 365  // 12 months
+spt_SL_short_term_days = 90  
+spt_SL_long_term_days = 365 
 spt_SL_daily_short_term_ema = request.security(syminfo.tickerid, "D", ta.ema(close, spt_SL_short_term_days))
 spt_SL_daily_long_term_ema = request.security(syminfo.tickerid, "D", ta.ema(close, spt_SL_long_term_days))
 spt_SL_4hr_short_term_ema = request.security(syminfo.tickerid, "240", ta.ema(close, spt_SL_short_term_days))
 spt_SL_4hr_long_term_ema = request.security(syminfo.tickerid, "240", ta.ema(close, spt_SL_long_term_days))
-trend_margin = 0.002  // 0.2% of EMA for tighter trend confirmation
+trend_margin = 0.002 
 spt_SL_daily_short_trend = close > spt_SL_daily_short_term_ema * (1 + trend_margin) ? 1 : (close < spt_SL_daily_short_term_ema * (1 - trend_margin) ? -1 : 0)
 spt_SL_daily_long_trend = close > spt_SL_daily_long_term_ema * (1 + trend_margin) ? 1 : (close < spt_SL_daily_long_term_ema * (1 - trend_margin) ? -1 : 0)
 spt_SL_4hr_short_trend = close > spt_SL_4hr_short_term_ema * (1 + trend_margin) ? 1 : (close < spt_SL_4hr_short_term_ema * (1 - trend_margin) ? -1 : 0)
@@ -170,9 +166,6 @@ table.cell(spt_SL_trend_table, 0, 0, "Long:", text_color=color.white, bgcolor=co
 table.cell(spt_SL_trend_table, 0, 1, spt_SL_long_strength == 2 ? "Bullish" : spt_SL_long_strength == 1 ? "Bullish" : spt_SL_long_strength == 0 ? "Neutral" : spt_SL_long_strength == -1 ? "Bearish" : "Bearish", text_color=spt_SL_long_color, bgcolor=color.white)
 table.cell(spt_SL_trend_table, 1, 0, "Short:", text_color=color.white, bgcolor=color.blue)
 table.cell(spt_SL_trend_table, 1, 1, spt_SL_short_strength == 2 ? "Bullish" : spt_SL_short_strength == 1 ? "Bullish" : spt_SL_short_strength == 0 ? "Neutral" : spt_SL_short_strength == -1 ? "Bearish" : "Bearish", text_color=spt_SL_short_color, bgcolor=color.white)
-
-
-// === Short/Long term trend ===
 spt_LINE_1m = 1440    
 spt_LINE_5m = 288     
 spt_LINE_1h1 = 1200   
@@ -188,7 +181,6 @@ spt_LINE_1DNF2 = 21
 spt_LINE_1W = 52     
 spt_LINE_1M = 84     
 ema_src = close
-// Defining the EMAs that will show up on different time frames
 var int spt_LINE_ema_length_1 = na
 if timeframe.isintraday and timeframe.multiplier == 1
     spt_LINE_ema_length_1 := 1
@@ -240,7 +232,6 @@ else if timeframe.ismonthly
     spt_LINE_ema_length_3 := spt_LINE_1M
 else
     spt_LINE_ema_length_3 := 1
-
 var int spt_LINE_ema_length_4 = na
 if timeframe.isintraday and timeframe.multiplier == 1
     spt_LINE_ema_length_4 := 1
