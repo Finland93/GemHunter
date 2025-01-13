@@ -1,7 +1,7 @@
 ## **GemHunter Tool for TradingView - Always free**
 ![GemHunter Tool Image](https://www.tradingview.com/x/VlBbsexD/)
 
-The GemHunter Tool for TradingView is a comprehensive trading assistant designed to enhance your trading strategy by combining advanced technical analysis with clear, actionable insights. Below is a detailed guide to the various metrics and visual indicators provided by the tool. [Checkout also our website here.](https://lowcapgems.xyz)
+The GemHunter Tool for TradingView is a comprehensive trading assistant designed to enhance your trading strategy by combining advanced technical analysis with clear, actionable insights. Below is a detailed guide to the various metrics and visual indicators provided by the tool. 
 
 ### **Seamless Integration with MACD Integration**
 
@@ -65,7 +65,7 @@ Once the tool is applied, monitor the visual indicators. Look for a green or red
 ## **MACD Integration for GemHunter**
 ![MACD Integration Image](https://www.tradingview.com/x/bldjXEoy/)
 
-Take your trading strategy to the next level with MACD Integration for GemHunter! This advanced version of the Moving Average Convergence Divergence (MACD) indicator is designed to seamlessly complement our upcoming GemHunter script, delivering unparalleled insights for trend and momentum analysis. [Checkout also our website here.](https://lowcapgems.xyz)
+Take your trading strategy to the next level with MACD Integration for GemHunter! This advanced version of the Moving Average Convergence Divergence (MACD) indicator is designed to seamlessly complement our upcoming GemHunter script, delivering unparalleled insights for trend and momentum analysis. 
 
 ### **Key Features:**
 
