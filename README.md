@@ -1,125 +1,156 @@
 # **GemHunter – TradingView Trend Detection Tool (Free)**
 
-**GemHunter** is a TradingView Pine Script designed to help traders clearly identify **uptrends**, **downtrends**, and **neutral phases** with minimal noise. It combines **EMA**, **MACD**, and **RSI** signals with optional higher timeframe confirmation to give you a reliable framework for trading in any market.
+**GemHunter** is a free Pine Script indicator for TradingView that helps you visually and systematically identify **bullish**, **bearish**, and **neutral market conditions**. It combines **EMA alignment**, **MACD momentum**, and **RSI strength** with optional **higher timeframe confirmation** to filter out noise and highlight actionable trends.
 
 ---
 
 ## **What Does GemHunter Do?**
 
-- **Dynamic background tint**: 
-  - **Green** = confirmed bullish trend  
-  - **Red** = confirmed bearish trend  
-  - **Gray** = neutral / chop  
-- **Multi-timeframe confirmation**: Avoid false flags by confirming trends against a higher timeframe.
-- **Trend tables**:
-  - **Short vs Long-term trend status** (top-right)
-  - **Average trend durations** (bottom-left)
-  - **Current regime & bar count** (bottom-right)
-- **Noise filters**: ATR-based EMA separation, slope filters, and minimum-hold bars to reduce whipsaws.
+- Dynamically tints your chart background:
+  - **Green:** Confirmed bullish trend.
+  - **Red:** Confirmed bearish trend.
+  - **Gray:** Sideways / neutral zone.
+- Displays **trend tables** showing:
+  - Short-term vs. long-term trend status.
+  - Average length of up and down trends.
+  - Current regime (uptrend/downtrend/neutral) and bar count.
+- Uses **multi-timeframe (MTF) logic** so you can confirm shorter-term setups against higher timeframe trends.
+- Provides **noise filters** (EMA slope, ATR separation, hysteresis) to reduce false flips in choppy markets.
 
 ---
 
-## **How to Add GemHunter to TradingView**
+## **Complete Setup Guide for TradingView**
 
-1. Open **TradingView**.
-2. Navigate to **Pine Editor** (bottom panel).
-3. Copy-paste the [GemHunter Pine Script](https://github.com/Finland93/GemHunter/blob/main/GemHunter/gemhunter.pine).
-4. Click **Add to Chart**.
-5. Adjust indicator settings to match your trading style:
-   - EMA lengths (fast/slow)
-   - RSI thresholds
-   - MACD parameters
-   - HTF confirmation options (Filter / Strict)
-   - Background mode (LTF-only, HTF-only, or gated combo)
+Follow these steps to add GemHunter and configure it correctly:
+
+### **1) Add GemHunter to Your Chart**
+1. Open [TradingView](https://www.tradingview.com/).
+2. Choose the asset and timeframe you want to analyze.
+3. Open the **Pine Editor** at the bottom panel.
+4. Paste the [GemHunter script code](https://github.com/Finland93/GemHunter/blob/main/GemHunter/gemhunter.pine) into the editor.
+5. Click **Add to Chart**.
+6. Save it to your TradingView account for easy reuse.
+
+### **2) Configure Indicator Inputs**
+Open the **Settings (⚙)** on the GemHunter indicator and review the inputs:
+- **EMA Settings:**
+  - *EMA Fast:* Default 50-period (adjust for asset volatility).
+  - *EMA Slow:* Default 200-period (adjust for longer-term bias).
+- **RSI Settings:**
+  - RSI length (default 14).
+  - Bull & Bear thresholds (default 55/45).
+- **MACD Settings:**
+  - Fast EMA: 12, Slow EMA: 26, Signal: 9 (classic MACD).
+- **Noise Filters:**
+  - ATR separation multiplier (how far apart EMAs must be to confirm a trend).
+  - EMA slope lookback & minimum ROC (filters sideways chop).
+  - RSI hysteresis & MACD strength multiplier (filters weak signals).
+- **Higher Timeframe (HTF) Options:**
+  - Enable/disable HTF confirmation.
+  - Choose HTF timeframe (e.g., if you trade 1H charts, select 4H).
+  - Mode:
+    - *Display Only*: Show HTF status but don’t filter LTF signals.
+    - *Filter*: Block LTF bullish if HTF bearish (and vice versa).
+    - *Strict*: Require full alignment between LTF and HTF.
+- **Background & Visuals:**
+  - Choose background source (LTF, HTF, or gated combo).
+  - Enable/disable EMAs and MACD dots.
+
+### **3) Adjust to Your Market & Style**
+- For **crypto / volatile assets:** Consider slightly shorter EMAs and wider ATR separation to avoid false flips.
+- For **stocks / forex:** Default 50/200 EMAs and 14-RSI often work well.
+- Backtest and optimize parameters for your asset and timeframe.
+
+### **4) Optional: Add Alerts**
+- In TradingView, go to **Alerts** → **Create Alert**.
+- Select the GemHunter indicator and choose conditions like:
+  - Trend regime flips (Uptrend → Downtrend).
+  - Background color changes.
+- This allows you to be notified instantly when trend conditions shift.
 
 ---
 
-## **How to Spot Trends with GemHunter**
+## **How to Use GemHunter for Trend Spotting**
 
-### **1) Confirm Trend Direction**
-GemHunter’s background and tables use **EMA + MACD + RSI** logic:
-- **Bullish:** Price above EMAs and at least MACD or RSI confirm strength.
-- **Bearish:** Price below EMAs and at least MACD or RSI confirm weakness.
-- **Neutral:** No clear confirmation; stay defensive.
+Once set up, follow this process:
 
-### **2) Watch Multi-Timeframe Alignment**
-Enable **HTF confirmation** for stronger conviction:
-- E.g., On a 1H chart, set HTF to 4H.
-- Only trade in the direction where LTF and HTF align (optional “Strict” mode).
+### **Step 1: Read the Background Color**
+- **Green:** Trend bias is bullish. Favor long setups.
+- **Red:** Trend bias is bearish. Favor shorts or hedging.
+- **Gray:** No clear bias. Stay cautious or wait for confirmation.
 
-### **3) Check Average Trend Durations**
-Bottom-left table shows typical uptrend/downtrend lengths (in bars).  
-Use this for **holding period expectations** and **trade timing**.
+### **Step 2: Confirm with Tables**
+- **Top-right table:** Shows short-term vs. long-term trend strength.
+- **Bottom-left:** Average up/down trend durations over recent history (helps estimate how long trends might last).
+- **Bottom-right:** Current regime & number of bars since it began.
 
-### **4) Use Minimum Hold & Filters**
-- **Confirm Bars:** Require multiple bars for confirmation to avoid false flips.
-- **ATR-based EMA separation & slope filters:** Prevent signals in sideways chop.
-- **Minimum Hold Bars:** Ensures trends persist before flipping.
+### **Step 3: Align with HTF (Optional)**
+- If using HTF confirmation:
+  - Only trade when **both LTF & HTF agree** (e.g., 1H background green + 4H bullish status).
+  - Strict mode helps avoid false counter-trend trades.
 
-### **5) Combine with Price Action**
-The background tint is your **bias**, not a standalone entry signal.  
-Look for confluence with:
-- Support/resistance levels
-- Breakouts/pullbacks
-- Candlestick patterns
+### **Step 4: Combine with Price Action**
+GemHunter gives trend context, but entries/exits are stronger with confluence:
+- Look for support/resistance breaks.
+- Confirm with candlestick patterns or volume.
+- Manage trades based on average trend durations.
+
+### **Step 5: Use Noise Filters to Avoid Chop**
+- If you see too many flips in sideways markets, increase:
+  - Confirm Bars.
+  - ATR separation multiplier.
+  - Minimum Hold Bars.
 
 ---
 
 ## **Optional MACD Integration – Advanced Momentum Layer**
 
-To enhance GemHunter’s signal reliability, add the [MACD Integration script](https://github.com/Finland93/GemHunter/blob/main/GemHunter/MACD-integration.pine) to your chart.  
+GemHunter already uses MACD internally, but for deeper analysis you can pair it with the **[MACD Integration script](https://github.com/Finland93/GemHunter/blob/main/GemHunter/MACD-integration.pine)**.
 
-This optional tool adds **advanced momentum analysis**, including:
+### **What MACD Integration Adds:**
+- **TEMA-smoothed MACD**: Triple EMA smoothing for cleaner crossovers.
+- **Volume-weighted MACD (optional)**: Filters low-volume moves.
+- **Multi-timeframe MACD display**: View higher timeframe MACD on your current chart.
+- **Divergence detection**: Automatic bullish/bearish divergence markers.
+- **Visual customization**: Histogram, zero-line, crossover dots.
+- **Trend status label**: Instant "Uptrend/Downtrend/Neutral" tag.
 
-### **Features:**
-- **TEMA-smoothed MACD:**  
-  - Triple EMA smoothing reduces lag and gives cleaner MACD/signal crossovers.
-- **Volume-weighted MACD (optional):**  
-  - Accounts for trading volume to filter weak crossovers.
-- **Multi-timeframe MACD:**  
-  - View MACD from a higher timeframe on your current chart.
-- **Divergence detection:**  
-  - Automatic bullish/bearish divergence markers when price & MACD disagree.
-- **Customizable visuals:**  
-  - Histogram, zero line, and crossover circles for clear signal interpretation.
-- **Trend status label:**  
-  - Shows **Uptrend**, **Downtrend**, or **Neutral** directly on your chart.
-
-### **How to Use MACD Integration with GemHunter:**
-1. Add both **GemHunter** and **MACD Integration** indicators to the same chart.
-2. Match MACD parameters with GemHunter’s MACD settings for consistency.
-3. Use MACD Integration to confirm:
-   - Crossovers aligning with GemHunter background flips.
-   - Divergences warning of potential reversals before GemHunter flips.
-4. For added precision:
-   - Turn on **volume-weighted MACD** to filter low-participation crossovers.
-   - Use **multi-timeframe MACD** (e.g., view 4H MACD while trading on 1H).
-5. Optional: Set TradingView alerts for MACD crossover with MTF confirmation (built into the script).
+### **How to Use with GemHunter:**
+1. Add MACD Integration alongside GemHunter.
+2. Match MACD parameters with GemHunter’s settings for consistency.
+3. Watch for:
+   - MACD crossover confirming GemHunter’s background flips.
+   - Divergence warnings before trend reversals.
+4. Combine volume-weighted MACD for stronger conviction.
+5. Use multi-timeframe MACD to spot larger trend context while trading lower timeframes.
+6. Set alerts for MACD crossover with MTF confirmation (built into the script).
 
 **Pro Tip:**  
-When GemHunter’s background turns **green/red** AND MACD Integration confirms with a **same-direction crossover + no bearish/bullish divergence**, the probability of a strong trend continuation is higher.
+Strongest setups often occur when:
+- GemHunter background is **green/red**.
+- MACD Integration crossover aligns in the same direction.
+- No opposing divergence is present.
 
 ---
 
-## **Educational Resources**
+## **Educational References**
 
-- [MACD – Investopedia](https://www.investopedia.com/terms/m/macd.asp)
-- [RSI – Investopedia](https://www.investopedia.com/terms/r/rsi.asp)
-- [EMA – Investopedia](https://www.investopedia.com/terms/e/ema.asp)
-- [Support & Resistance](https://www.investopedia.com/terms/s/support.asp)
+- [MACD – Investopedia](https://www.investopedia.com/terms/m/macd.asp)  
+- [RSI – Investopedia](https://www.investopedia.com/terms/r/rsi.asp)  
+- [EMA – Investopedia](https://www.investopedia.com/terms/e/ema.asp)  
+- [Support & Resistance](https://www.investopedia.com/terms/s/support.asp)  
 - [Divergence Trading](https://www.investopedia.com/terms/d/divergence.asp)
 
 ---
 
 ## **Disclaimer**
 
-> **GemHunter and MACD Integration are for educational purposes only.**  
-> This is **not financial advice**. Trading is risky and you are solely responsible for your decisions.  
-> Always backtest and consult a financial professional before committing capital.
+> GemHunter and MACD Integration are **educational tools**, not financial advice.  
+> Trading and investing involve risk. You are responsible for your decisions.  
+> Backtest and adjust settings for your strategy. Seek professional advice if needed.
 
 ---
 
-### **Bottom Line:**
-- **GemHunter = Trend bias engine (EMA + MACD + RSI + HTF).**  
-- **MACD Integration = Momentum confirmation & divergence spotting.**  
-Together they form a **robust system** for trading any market or timeframe.
+### **Bottom Line**
+GemHunter provides **clarity and context** for market trends.  
+Use the **background tint + trend tables** for bias, confirm with price action, and optionally enhance with **MACD Integration** for momentum and divergence insights.
