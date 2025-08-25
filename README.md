@@ -1,110 +1,109 @@
-## **GemHunter Tool for TradingView - Always free**
-![GemHunter Tool Image](https://www.tradingview.com/x/VlBbsexD/)
+# **GemHunter – TradingView Trend Detection Tool (Free)**
 
-The GemHunter Tool for TradingView is a comprehensive trading assistant designed to enhance your trading strategy by combining advanced technical analysis with clear, actionable insights. Below is a detailed guide to the various metrics and visual indicators provided by the tool. 
-
-### **Seamless Integration with MACD Integration**
-
-While powerful on its own, the GemHunter Tool for TradingView truly shines when paired with the MACD Integration for GemHunter, enabling you to harness the full potential of trend momentum and divergence detection. Together, they form a robust ecosystem for professional-grade trading.
-
-### **Features & Indicators**
-
-1. **Support and Resistance Lines:**
-   These lines automatically identify and lock in the most important support and resistance levels based on historical price action. These levels are crucial for planning your entries and exits. Support lines represent price levels where the asset tends to find buying interest, while resistance lines represent price levels where selling pressure tends to emerge.
-
-   **Precision Control:** You can adjust the precision with which these lines are identified, allowing for fine-tuned analysis based on your preferred trading style.
-
-2. **Background Color Change Based on Market Momentum:**
-   The background color on your chart changes dynamically to reflect the momentum of the market, as determined by a MACD (Moving Average Convergence Divergence) crossover strategy:
-
-   - **Green Background:** Represents a bullish trend when the faster MACD line is above the signal line, and the MACD line itself is positive.
-   - **Red Background:** Represents a bearish trend when the faster MACD line is below the signal line, and the MACD line itself is negative.
-   - **Gray Background:** Represents a neutral trend when neither the bullish nor bearish conditions are met.
-
-3. **Trend Change Arrows:** These arrows are plotted on the chart to visually indicate a shift in market direction:
-   - **Upward Green Arrow (▲):** Appears when the tool detects the beginning of an Uptrend (price above certain moving averages, such as the Ichimoku spans and EMA).
-   - **Downward Red Arrow (▼):** Appears when the tool detects the start of a Downtrend (price below key moving averages).
-
-4. **Average Trend Duration:** This table on bottom left tracks the average duration of uptrends and downtrends over the past 365 bars (or roughly 1 year of daily data). Knowing the typical trend duration can help you better time your entries and exits.
-   - **Average Uptrend Duration:** Shows the average length of time (in bars) that price has been moving upward before reversing.
-   - **Average Downtrend Duration:** Shows the average length of time that price has been moving downward before reversing.
-
-5. **Current Trend:** This table on bottom right displays the current trend of the market based on multiple timeframes (short-term and long-term):
-   - **Uptrend:** If the current price is above both the Senkou Span A and Senkou Span B (Ichimoku-style metrics), it indicates an uptrend.
-   - **Downtrend:** If the price is below both the Senkou spans, it indicates a downtrend.
-   - **Neutral:** If neither uptrend nor downtrend conditions are met, it will show as neutral.
-
-6. **Short/Long-Term Trends:** This table displays the current strength of short-term and long-term trends based on EMA (Exponential Moving Averages) over different time periods:
-   - **Long-Term Trend:** The long-term trend is assessed using 365-day EMA (daily chart) and 365-day EMA (4-hour chart), showing the strength of the overall market movement over a year.
-   - **Short-Term Trend:** The short-term trend is evaluated using 90-day EMA (daily chart) and 90-day EMA (4-hour chart), showing the strength of the trend over a shorter period.
-
-   **The Strength Indicators:**
-   - **Bullish:** If the price is well above the moving average, the trend is considered bullish.
-   - **Neutral:** If the price is near the moving average, it indicates a neutral trend.
-   - **Bearish:** If the price is well below the moving average, the trend is bearish.
-
-   The strength of these trends is visually represented in the table and is color-coded:
-   - **Green:** Strong bullish trend
-   - **Black:** Neutral or weak trend
-   - **Red:** Strong bearish trend
-
-7. **EMA Indicators:** This tool also includes multiple EMAs across various timeframes, providing a comprehensive view of market trends. These EMAs are used to determine trend strength and potential reversal points, with each line offering a unique perspective based on the timeframe it covers.
-
-   - **Short-term EMAs** (8D / 150h, 21D / 365h)
-   - **Mid-term EMAs** (50D, 200D, 1W, 1M)
-   - **Long-term EMAs** (365-day EMA and 4-hour chart)  
-
-### **How to Use:**
-
-To use the GemHunter Tool, simply add it to your chart [copy & paste pine script here](https://github.com/Finland93/GemHunter/blob/main/GemHunter/gemhunter.pine), and it will automatically plot key support and resistance lines, trend arrows, and trend strength tables. You can customize the tool by adjusting parameters such as Fast Length, Slow Length, and Signal Length to tailor the indicators to your preferred trading style.
-
-Once the tool is applied, monitor the visual indicators. Look for a green or red background, which signals momentum shifts, and keep an eye out for upward (▲) or downward (▼) arrows that indicate trend changes. Additionally, refer to the trend strength tables. The bottom-left table will show the average trend duration, while the bottom-right table will provide the current trend status, allowing you to assess the market conditions. Lastly, use the top-right table to gauge the strength of both short-term (90 days) and long-term (365 days) trends, giving you a comprehensive view of the market’s movement.
+**GemHunter** is a TradingView Pine Script designed to help traders clearly identify **uptrends**, **downtrends**, and **neutral market phases** with minimal noise. It combines **EMA**, **MACD**, and **RSI** signals with higher timeframe confirmation to give you a reliable trend framework.
 
 ---
 
-## **MACD Integration for GemHunter**
-![MACD Integration Image](https://www.tradingview.com/x/bldjXEoy/)
+## **What Does GemHunter Do?**
 
-Take your trading strategy to the next level with MACD Integration for GemHunter! This advanced version of the Moving Average Convergence Divergence (MACD) indicator is designed to seamlessly complement our upcoming GemHunter script, delivering unparalleled insights for trend and momentum analysis. 
-
-### **Key Features:**
-
-- **Enhanced MACD Analysis:** Combines the power of standard MACD with advanced TEMA smoothing for reduced lag and sharper signals.
-- **Volume Integration:** Optionally incorporate volume into MACD calculations to account for market participation and filter false signals.
-- **Multi-Timeframe Support:** Analyze trends across different timeframes to gain a broader perspective and confirm signal reliability.
-- **Divergence Detection:** Spot bullish and bearish divergences to anticipate potential reversals or trend continuations.
-- **Visual Clarity:** Customizable histogram, crossover markers, and zero line for easy interpretation of market dynamics.
-- **Trend Status Display:** Get instant feedback on market sentiment with dynamic trend labels directly on your chart.
-
-### **Why Use This Tool?**
-
-This tool is perfect for traders who value precision and flexibility. Whether you're analyzing market trends, identifying trade entry/exit points, or looking to confirm signals with volume and multi-timeframe alignment, this indicator empowers you with actionable insights.
-
-### **Seamless Integration with GemHunter**
-
-The MACD Integration for GemHunter is built specifically to enhance the functionality of the GemHunter script. Together, they form a complete solution for uncovering hidden trading opportunities in any market. 
-
-### **How to Use:**
-
-To make the most of the MACD Integration for GemHunter [copy & paste pine script here](https://github.com/Finland93/GemHunter/blob/main/GemHunter/MACD-integration.pine), begin by adjusting the input parameters to align with your trading style and strategy. Use the customizable settings to tailor the indicator’s sensitivity and visualization to your specific needs. As you monitor your charts, pay attention to the divergence signals, MACD crossovers, and the trend status label, which provide actionable insights into market dynamics. For added convenience, set up alerts to stay informed about critical market movements, ensuring you never miss an important signal. Finally, combine this tool with the GemHunter tool  for TradingView to create a complete trading system, unlocking powerful insights and identifying profitable opportunities with precision.
+- Colors your chart **background** dynamically:
+  - **Green**: Confirmed bullish trend
+  - **Red**: Confirmed bearish trend
+  - **Gray**: Neutral or indecisive market
+- Displays:
+  - **Short-term and Long-term trend status**
+  - **Average uptrend/downtrend durations**
+  - **Current regime and bar count**
+- Uses **multi-timeframe (MTF) analysis** to confirm signals and reduce false flags.
+- Supports customizable noise filters and minimum-hold bars to avoid whipsaws.
 
 ---
 
-## **Tutorials**
+## **How to Add GemHunter to TradingView**
 
-Here you will find tutorials and explanations for the various indicators used in the GemHunter Tool for TradingView. For in-depth knowledge on each concept, we have linked to Investopedia articles that explain the key terms.
+1. Open **TradingView**.
+2. Go to **Pine Editor** (bottom panel).
+3. Copy-paste the [GemHunter Pine Script](https://github.com/Finland93/GemHunter/blob/main/GemHunter/gemhunter.pine).
+4. Click **Add to Chart**.
+5. Adjust settings in the **indicator inputs** panel:
+   - EMA lengths, RSI thresholds, MACD parameters.
+   - Enable/disable higher timeframe confirmation.
+   - Set your preferred background and filter options.
 
-- **[Support and Resistance](https://www.investopedia.com/terms/s/support.asp):** Learn how support and resistance levels are identified and their importance in trading.
-- **[MACD (Moving Average Convergence Divergence)](https://www.investopedia.com/terms/m/macd.asp):** A guide to understanding the MACD indicator and its role in trend analysis.
-- **[Exponential Moving Average (EMA)](https://www.investopedia.com/terms/e/ema.asp):** Explore how EMAs are used to determine market trends and potential reversals.
-- **[Ichimoku Cloud](https://www.investopedia.com/terms/i/ichimoku-cloud.asp):** A comprehensive look at the Ichimoku Cloud and how it helps in identifying support, resistance, and trends.
-- **[Volume](https://www.investopedia.com/terms/v/volume.asp):** Understand the role of trading volume and how it can confirm or contradict price movements.
-- **[Divergence in Trading](https://www.investopedia.com/terms/d/divergence.asp):** Learn how divergence between price and indicators signals potential trend changes.
+---
+
+## **How to Spot Trends with GemHunter**
+
+### **1) Confirm Trend Direction**
+GemHunter defines trends using **EMA alignment + MACD + RSI**:
+- Bullish: Price above EMAs, MACD and RSI confirm strength.
+- Bearish: Price below EMAs, MACD and RSI confirm weakness.
+- Neutral: No clear confirmation.
+
+The **background color** helps you visually confirm this instantly.
+
+### **2) Watch Multi-Timeframe Alignment**
+For more reliable entries:
+- Enable **HTF mode** (e.g., analyze a 1H chart with 4H confirmation).
+- When **short-term and higher timeframe agree**, trend conviction is stronger.
+
+### **3) Check Average Trend Durations**
+The bottom-left panel shows:
+- **Avg Uptrend Bars:** How long uptrends typically last.
+- **Avg Downtrend Bars:** How long downtrends typically last.
+
+Use this to set realistic trade holding periods and manage expectations.
+
+### **4) Identify Current Market Regime**
+The bottom-right panel displays:
+- **Uptrend**, **Downtrend**, or **Neutral**.
+- **Bars in Trend:** How long the current regime has lasted.
+
+Combine this with background color for quick trend validation.
+
+### **5) Adjust Filters to Reduce Noise**
+- **Confirm Bars:** Require multiple bars to confirm a trend.
+- **EMA separation & slope filters:** Prevent signals in sideways chop.
+- **Minimum Hold Bars:** Avoid rapid flip-flops by forcing a minimum trend duration.
+
+---
+
+## **Best Practices for Traders**
+
+- **Combine with price action:** Use background as a trend bias, not a trade signal by itself.
+- **Look for confluence:** Align GemHunter’s bias with support/resistance levels, breakouts, or candlestick patterns.
+- **Use alerts:** Configure TradingView alerts when regime flips (Uptrend → Downtrend) for timely notifications.
+- **Backtest your settings:** Adjust EMA/RSI/MACD parameters per asset (crypto, stocks, forex) and timeframe.
+
+---
+
+## **Optional MACD Integration**
+
+Pair GemHunter with the [MACD Integration script](https://github.com/Finland93/GemHunter/blob/main/GemHunter/MACD-integration.pine) for:
+- **Advanced MACD smoothing** (TEMA)
+- **Volume-weighted MACD**
+- **Divergence detection**
+- **Multi-timeframe MACD confirmation**
+
+This helps you validate GemHunter’s background signals with an additional momentum layer.
+
+---
+
+## **Educational Resources**
+
+- [MACD – Investopedia](https://www.investopedia.com/terms/m/macd.asp)
+- [RSI – Investopedia](https://www.investopedia.com/terms/r/rsi.asp)
+- [EMA – Investopedia](https://www.investopedia.com/terms/e/ema.asp)
+- [Support & Resistance](https://www.investopedia.com/terms/s/support.asp)
 
 ---
 
 ## **Disclaimer**
 
-> The information provided by the GemHunter Tool and its associated features is for educational and informational purposes only. We do not offer any financial, investment, or trading advice. Trading and investing involve substantial risk, and you should only trade with money you can afford to lose.
-> 
-> We are not responsible for any financial losses that may occur as a result of using this tool. You are solely responsible for any trading decisions and actions you take based on the data provided by the GemHunter Tool. Please conduct thorough research or consult a qualified financial advisor before making any financial decisions.
+> **GemHunter is for educational purposes only.**  
+> This is **not financial advice**. Markets are risky, and you are fully responsible for your trading decisions. Backtest thoroughly and consult a financial professional before making investment decisions.
+
+---
+
+### **Bottom Line:**
+GemHunter gives you **clarity**. No more guessing trend direction—use its **background tint + regime tables** to align trades with dominant market bias and avoid sideways traps.
