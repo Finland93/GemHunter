@@ -12,6 +12,7 @@ It ships with a companion oscillator, **MACD Integration (“MACD+”)**, for mo
 
 - **Tints the chart background** by regime: green (bullish), red (bearish), gray (neutral).
 - **Marks regime flips** on the chart with ▲ *Bull* / ▼ *Bear* triangles so reversals are easy to spot.
+- **Draws support & resistance zones** from confirmed swing pivots, merges nearby ones, and labels each with a touch count — so you see which levels actually matter.
 - **Shows three compact tables**: higher-timeframe vs chart status + live ADX, average up/down trend durations, and the current regime with its bar count.
 - **Filters noise** with EMA-separation (ATR), slow-EMA slope, RSI hysteresis, MACD-histogram strength, a debounce, and a minimum hold time — all tunable.
 - **Confirms against a higher timeframe** without repainting (values update only when the HTF bar closes).
@@ -59,6 +60,14 @@ It ships with a companion oscillator, **MACD Integration (“MACD+”)**, for mo
 - **Min Bars to Hold Trend** — the regime can’t flip again until this many bars pass since the last flip.
 - **Show Flip Markers** — the ▲/▼ regime-change triangles (default on).
 
+### Support & Resistance
+- **Show S/R Zones** — draw the pivot-based zones (default on).
+- **Pivot Left / Right** — bars on each side that define a swing (default 15 / 15). Larger = stronger, fewer levels, but each appears later (this lag is confirmation, not repainting).
+- **Max Levels Kept** — once this many zones exist, the oldest un-retested one is dropped (default 8).
+- **Zone Half-Width (×ATR)** — zone thickness as a multiple of ATR (default 0.25).
+- **Merge Distance (×ATR)** — a new pivot this close to an existing zone reinforces it (touch count +1) instead of drawing a duplicate (default 0.5).
+- **Extend Right / Show Touch Count** — project zones forward and label each with how many times it's been tested.
+
 ### Style
 - Background tint, tables, EMAs, and optional MACD zero-line dots can each be toggled.
 
@@ -75,9 +84,11 @@ It ships with a companion oscillator, **MACD Integration (“MACD+”)**, for mo
 - **Bottom-left** — `AVG UP:` / `AVG DOWN:` average durations of past up- and down-trends, to gauge how long moves tend to run on this symbol.
 - **Bottom-right** — current `Trend:` and how many `Bars:` it has lasted.
 
-**4. Align with the higher timeframe.** In *Filter* or *Strict* mode the strongest reads are when chart and HTF agree (e.g. chart background green + `HTF: Bullish`).
+**4. Support & resistance zones.** Green zones are support (price above), red zones are resistance (price below); a level that breaks flips colour automatically, the way old support becomes new resistance. The number on each zone is its touch count — higher means a more significant, more-tested level. Watch for reactions at zones, and treat a close *through* a strong zone (with the regime agreeing) as a breakout.
 
-**5. Combine with price action.** GemHunter gives context; entries are stronger with confluence — support/resistance breaks, candle patterns, volume.
+**5. Align with the higher timeframe.** In *Filter* or *Strict* mode the strongest reads are when chart and HTF agree (e.g. chart background green + `HTF: Bullish`).
+
+**6. Combine with price action.** GemHunter gives context; entries are stronger with confluence — support/resistance breaks, candle patterns, volume.
 
 ---
 
@@ -102,6 +113,7 @@ The script defines named alert conditions, so they show up directly in TradingVi
    - ▲ Flip to Uptrend / ▼ Flip to Downtrend
    - LTF Bullish (gated) / LTF Bearish (gated)
    - HTF turned Bullish / HTF turned Bearish
+   - Broke a Level up / Broke a Level down (price closes through an S/R zone)
 3. Set the trigger to **Once Per Bar Close** to match the non-repainting logic, and save.
 
 Each alert message includes the ticker and interval, so the same alert works across an entire watchlist.
