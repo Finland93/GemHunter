@@ -1,113 +1,149 @@
 //@version=6
+// ════════════════════════════════════════════════════════════════════════════════
+//  MACD Integration for GemHunter  (Smoothed · Volume-aware · MTF · Divergence)
+//  Companion oscillator for the GemHunter trend-regime indicator.
+//  https://github.com/Finland93/GemHunter
+//  Educational tool, not financial advice. Backtest before using.
+// ════════════════════════════════════════════════════════════════════════════════
 indicator(title="MACD Integration for GemHunter (Smoothed)", shorttitle="GemHunter MACD+", overlay=false)
 
-// ── Inputs
+// ── Inputs ──────────────────────────────────────────────────────────────────────
 source        = input.source(close, title="Source")
 fastLength    = input.int(12,  title="Fast Length",   minval=1)
 slowLength    = input.int(26,  title="Slow Length",   minval=1)
 signalLength  = input.int(9,   title="Signal Length", minval=1)
-maType        = input.string(defval="SuperSmoother", title="MA Type",
-                 options=["EMA","DEMA","TEMA","SuperSmoother","RMA"])
-useVolume     = input.bool(true,  title="Use Volume Factor")
+maType        = input.string(defval="SuperSmoother", title="MA Type", options=["EMA","DEMA","TEMA","SuperSmoother","RMA"], tooltip="Smoothing applied to the fast/slow averages. SuperSmoother (Ehlers) gives low lag with little noise; EMA reproduces the classic MACD.")
+useVolume     = input.bool(true,  title="Use Volume Factor", tooltip="Scales MACD by relative volume so low-volume drift is de-emphasised. Safely ignored on instruments without volume.")
 volSmaLen     = input.int(50,     title="Volume SMA Len",   minval=1)
 volEmaLen     = input.int(10,     title="Volume EMA Len",   minval=1)
-volCap        = input.float(1.8,  title="Volume Factor Cap (x)", minval=0.5, step=0.1)
-mtfTF         = input.timeframe("", title="MTF Confirm TF (optional)")
+volCap        = input.float(1.8,  title="Volume Factor Cap (x)", minval=0.5, step=0.1, tooltip="Clamps the volume factor to [1/cap, cap] so a single spike can't dominate.")
+mtfTF         = input.timeframe("", title="MTF Confirm TF (optional)", tooltip="Leave blank to disable. When set, crosses must agree with this higher timeframe's MACD.")
 showHist      = input.bool(true,  title="Show Histogram")
 showCross     = input.bool(true,  title="Show Cross Dots")
 showDiv       = input.bool(false, title="Show Divergence (pivot-based)")
-// Extra visual smoothing (EMA)
-macdSmoothLen = input.int(3, title="Extra MACD Smooth",  minval=0)
-sigSmoothLen  = input.int(3, title="Extra Signal Smooth",minval=0)
-histSmoothLen = input.int(2, title="Extra Hist Smooth",  minval=0)
+showLabel     = input.bool(true,  title="Show Trend Label")
+// Extra visual smoothing (EMA passes; 0 = off)
+macdSmoothLen = input.int(3, title="Extra MACD Smooth",   minval=0)
+sigSmoothLen  = input.int(3, title="Extra Signal Smooth", minval=0)
+histSmoothLen = input.int(2, title="Extra Hist Smooth",   minval=0)
 
-// ── MAs
-dema(src, l) => 2*ta.ema(src, l) - ta.ema(ta.ema(src, l), l)
+// ── Moving-average helpers ───────────────────────────────────────────────────────
+dema(src, l) => 2 * ta.ema(src, l) - ta.ema(ta.ema(src, l), l)
+
 tema(src, l) =>
     e1 = ta.ema(src, l)
     e2 = ta.ema(e1, l)
     e3 = ta.ema(e2, l)
-    3*(e1 - e2) + e3
+    3 * (e1 - e2) + e3
+
 // Ehlers 2-pole SuperSmoother
 superSmoother(src, length) =>
     PI = 3.141592653589793
-    a1 = math.exp(-1.414*PI/length)
-    b1 = 2*a1*math.cos(1.414*PI/length)
+    a1 = math.exp(-1.414 * PI / length)
+    b1 = 2 * a1 * math.cos(1.414 * PI / length)
     c2 = b1
-    c3 = -a1*a1
+    c3 = -a1 * a1
     c1 = 1 - c2 - c3
     var float filt = na
-    filt := na(filt[1]) ? src : c1*(src + nz(src[1]))/2 + c2*nz(filt[1]) + c3*nz(filt[2])
+    filt := na(filt[1]) ? src : c1 * (src + nz(src[1])) / 2 + c2 * nz(filt[1]) + c3 * nz(filt[2])
     filt
 
 ma(src, l) =>
     switch maType
-        "EMA"          => ta.ema(src, l)
-        "DEMA"         => dema(src, l)
-        "TEMA"         => tema(src, l)
-        "RMA"          => ta.rma(src, l)
+        "EMA"  => ta.ema(src, l)
+        "DEMA" => dema(src, l)
+        "TEMA" => tema(src, l)
+        "RMA"  => ta.rma(src, l)
         => superSmoother(src, math.max(l, 2))
 
 emaIf(src, l) => l > 0 ? ta.ema(src, l) : src
 
-// ── Non-repainting HTF wrapper (confirmed only)
+// ── Non-repainting HTF wrapper (confirmed values only) ───────────────────────────
 htfConfirm(expr) =>
     mtfTF == "" ? expr : request.security(syminfo.tickerid, mtfTF, barstate.isconfirmed ? expr : nz(expr[1]), barmerge.gaps_off, barmerge.lookahead_off)
 
-// ── Core MACD (smoothed + volume-normalized)
+// ── Core MACD (smoothed + volume-normalised) ─────────────────────────────────────
 fastMA  = ma(source, fastLength)
 slowMA  = ma(source, slowLength)
 macdRaw = fastMA - slowMA
 
-volNorm = volume / nz(ta.sma(volume, volSmaLen))
-volFac  = useVolume ? math.min(volCap, math.max(1/volCap, ta.ema(volNorm, volEmaLen))) : 1.0
-macd    = macdRaw * volFac
+// Volume factor with division-by-zero / no-volume guard
+volSma  = ta.sma(volume, volSmaLen)
+volNorm = na(volSma) or volSma == 0 ? 1.0 : volume / volSma
+volFac  = useVolume ? math.min(volCap, math.max(1 / volCap, ta.ema(volNorm, volEmaLen))) : 1.0
 
-signal  = ta.ema(macd, signalLength)
-macd    := emaIf(macd,  macdSmoothLen)
-signal  := emaIf(signal, sigSmoothLen)
-hist    = macd - signal
-hist    := emaIf(hist,  histSmoothLen)
+// Build the MACD, then derive the signal from the *final* (extra-smoothed) MACD so
+// the two lines stay internally consistent.
+macd   = macdRaw * volFac
+macd   := emaIf(macd, macdSmoothLen)
+signal = ta.ema(macd, signalLength)
+signal := emaIf(signal, sigSmoothLen)
+hist   = macd - signal
+hist   := emaIf(hist, histSmoothLen)
 
-// ── MTF confirm series
+// ── MTF confirm series ───────────────────────────────────────────────────────────
 macdHTF   = htfConfirm(macd)
 signalHTF = htfConfirm(signal)
 
-// ── Cross logic (align with HTF if set)
+// ── Cross logic (aligned with HTF when set) ──────────────────────────────────────
 bullCross = ta.crossover(macd, signal)  and (mtfTF == "" or macdHTF > signalHTF)
 bearCross = ta.crossunder(macd, signal) and (mtfTF == "" or macdHTF < signalHTF)
 
-// ── Divergence (pivot-based, optional)
-left = 5
+// ── Divergence (pivot-based, optional) ───────────────────────────────────────────
+left  = 5
 right = 5
 pl = ta.pivotlow(low, left, right)
 ph = ta.pivothigh(high, left, right)
 plCond = not na(pl)
 phCond = not na(ph)
-lastPL      = ta.valuewhen(plCond, pl, 0)
-prevPL      = ta.valuewhen(plCond, pl, 1)
-lastPLmacd  = ta.valuewhen(plCond, macd[right], 0)
-prevPLmacd  = ta.valuewhen(plCond, macd[right], 1)
+
+lastPL     = ta.valuewhen(plCond, pl, 0)
+prevPL     = ta.valuewhen(plCond, pl, 1)
+lastPLmacd = ta.valuewhen(plCond, macd[right], 0)
+prevPLmacd = ta.valuewhen(plCond, macd[right], 1)
 bullDiv = showDiv and plCond and lastPL < prevPL and lastPLmacd > prevPLmacd
 
-lastPH      = ta.valuewhen(phCond, ph, 0)
-prevPH      = ta.valuewhen(phCond, ph, 1)
-lastPHmacd  = ta.valuewhen(phCond, macd[right], 0)
-prevPHmacd  = ta.valuewhen(phCond, macd[right], 1)
+lastPH     = ta.valuewhen(phCond, ph, 0)
+prevPH     = ta.valuewhen(phCond, ph, 1)
+lastPHmacd = ta.valuewhen(phCond, macd[right], 0)
+prevPHmacd = ta.valuewhen(phCond, macd[right], 1)
 bearDiv = showDiv and phCond and lastPH > prevPH and lastPHmacd < prevPHmacd
 
-// ── Plots
-plot(macd,   "MACD",        color=color.purple, linewidth=2)
-plot(signal, "Signal Line", color=color.blue,   linewidth=2)
-plot(showHist ? hist : na, "Histogram",
-     color=color.new(hist >= 0 ? color.green : color.red, 0),
-     style=plot.style_histogram, linewidth=2)
+// ── Plots ────────────────────────────────────────────────────────────────────────
+plot(macd,   "MACD",        color=color.new(color.purple, 0), linewidth=2)
+plot(signal, "Signal Line", color=color.new(color.blue,   0), linewidth=2)
 
-plot(showCross and bullCross ? macd : na, "Cross Over",  style=plot.style_circles, color=color.green, linewidth=3)
-plot(showCross and bearCross ? macd : na, "Cross Under", style=plot.style_circles, color=color.red,   linewidth=3)
+// 4-colour histogram: bright when momentum is expanding, faded when contracting
+histRise = hist >= nz(hist[1])
+colUp    = #26a69a
+colDn    = #ef5350
+histCol  = hist >= 0 ? (histRise ? colUp : color.new(colUp, 55)) : (histRise ? color.new(colDn, 55) : colDn)
+plot(showHist ? hist : na, "Histogram", color=histCol, style=plot.style_columns)
 
-hline(0, "Zero Line", color=color.gray)
+plot(showCross and bullCross ? macd : na, "Cross Over",  style=plot.style_circles, color=color.new(color.green, 0), linewidth=3)
+plot(showCross and bearCross ? macd : na, "Cross Under", style=plot.style_circles, color=color.new(color.red,   0), linewidth=3)
+hline(0, "Zero Line", color=color.new(color.gray, 0))
 
-// Optional divergence markers
-plotshape(bullDiv, title="Bull Div", style=shape.triangleup,   location=location.belowbar, color=color.new(color.green,0), size=size.tiny, text="DIV")
-plotshape(bearDiv, title="Bear Div", style=shape.triangledown, location=location.abovebar, color=color.new(color.red,0),   size=size.tiny, text="DIV")
+plotshape(bullDiv, title="Bull Div", style=shape.triangleup,   location=location.belowbar, color=color.new(color.green, 0), size=size.tiny, text="DIV")
+plotshape(bearDiv, title="Bear Div", style=shape.triangledown, location=location.abovebar, color=color.new(color.red,   0), size=size.tiny, text="DIV")
+
+// ── Trend label (delivers the README's "Uptrend/Downtrend/Neutral" tag) ──────────
+trendBull = macd > signal and macd > 0
+trendBear = macd < signal and macd < 0
+trendTxt  = trendBull ? "Uptrend" : trendBear ? "Downtrend" : "Neutral"
+trendCol  = trendBull ? color.green : trendBear ? color.red : color.gray
+mtfTxt    = mtfTF == "" ? "—" : (macdHTF > signalHTF ? "Bull" : macdHTF < signalHTF ? "Bear" : "Neutral")
+mtfCol    = mtfTF == "" ? color.gray : (macdHTF > signalHTF ? color.green : macdHTF < signalHTF ? color.red : color.gray)
+
+var table tbl = table.new(position.top_right, 2, 2, bgcolor=color.new(color.white, 88), frame_color=color.new(color.black, 75), frame_width=1)
+if showLabel and barstate.islast
+    table.cell(tbl, 0, 0, "MACD:", text_color=color.white, bgcolor=color.new(color.blue, 0))
+    table.cell(tbl, 1, 0, trendTxt, text_color=trendCol, bgcolor=color.white)
+    table.cell(tbl, 0, 1, "MTF:",  text_color=color.white, bgcolor=color.new(color.blue, 0))
+    table.cell(tbl, 1, 1, mtfTxt,  text_color=mtfCol, bgcolor=color.white)
+
+// ── Alerts (create via Alerts → Condition: GemHunter MACD+) ──────────────────────
+alertcondition(bullCross, title="MACD+ ▲ Bullish Cross", message="GemHunter MACD+: bullish cross — {{ticker}} {{interval}}")
+alertcondition(bearCross, title="MACD+ ▼ Bearish Cross", message="GemHunter MACD+: bearish cross — {{ticker}} {{interval}}")
+alertcondition(bullDiv,   title="MACD+ • Bullish Divergence", message="GemHunter MACD+: bullish divergence — {{ticker}} {{interval}}")
+alertcondition(bearDiv,   title="MACD+ • Bearish Divergence", message="GemHunter MACD+: bearish divergence — {{ticker}} {{interval}}")
