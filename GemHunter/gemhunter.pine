@@ -5,7 +5,7 @@
 //  https://github.com/Finland93/GemHunter
 //  Educational tool, not financial advice. Backtest before using.
 // ════════════════════════════════════════════════════════════════════════════════
-indicator("GemHunter v4 (EMA+RSI+MACD+ADX, Anti-Chop, MTF-Confirmed)", shorttitle="GemHunter v4", overlay=true, max_bars_back=5000)
+indicator("GemHunter v4 (EMA+RSI+MACD+ADX+S/R, Anti-Chop, MTF-Confirmed)", shorttitle="GemHunter v4", overlay=true, max_bars_back=5000, max_boxes_count=500, max_labels_count=500)
 
 // ════════════════════════════════════════════════════════════════════════════════
 // INPUTS
@@ -51,6 +51,16 @@ showBG      = input.bool(true,  "Background Tint", group=grp_style)
 showTable   = input.bool(true,  "Show Tables", group=grp_style)
 showEMAs    = input.bool(true,  "Plot EMAs", group=grp_style)
 showMACDZero= input.bool(false, "Show MACD Zero Dots", group=grp_style)
+
+grp_sr      = "Support & Resistance"
+showSR      = input.bool(true,  "Show S/R Zones", group=grp_sr)
+srLeft      = input.int(15,     "Pivot Left",  minval=1, group=grp_sr)
+srRight     = input.int(15,     "Pivot Right", minval=1, group=grp_sr, tooltip="Bars required AFTER a swing before it's confirmed as a pivot. Larger = stronger, fewer levels, but each level appears later. This delay is confirmation lag, not repainting.")
+srMaxLevels = input.int(8,      "Max Levels Kept", minval=1, maxval=30, group=grp_sr, tooltip="Once this many zones exist, the oldest un-retested one is removed to keep the chart clean.")
+srZoneAtr   = input.float(0.25, "Zone Half-Width (x ATR)", minval=0.0, step=0.05, group=grp_sr, tooltip="Half-thickness of each zone as a multiple of ATR(14).")
+srMergeAtr  = input.float(0.5,  "Merge Distance (x ATR)",  minval=0.0, step=0.05, group=grp_sr, tooltip="A new pivot within this many ATRs of an existing zone reinforces it (touch count +1) instead of drawing a duplicate.")
+srExtend    = input.int(10,     "Extend Right (bars)", minval=0, group=grp_sr)
+srShowStrength = input.bool(true, "Show Touch Count", group=grp_sr)
 
 // ════════════════════════════════════════════════════════════════════════════════
 // CORE (LTF / chart timeframe)
@@ -252,6 +262,109 @@ plotshape(showMACDZero and macdLine > 0, title="MACD>0", style=shape.circle, loc
 plotshape(showMACDZero and macdLine < 0, title="MACD<0", style=shape.circle, location=location.abovebar, color=color.new(color.red,   0), size=size.tiny)
 
 // ════════════════════════════════════════════════════════════════════════════════
+// SUPPORT & RESISTANCE — confirmed-pivot zones with touch-count strength
+//   • Levels come from confirmed swing pivots, so they DO NOT repaint. A zone simply
+//     appears srRight bars after its pivot (confirmation lag, not repainting).
+//   • A new pivot within "Merge Distance" of an existing zone reinforces it
+//     (touch count +1) instead of cluttering the chart with a duplicate.
+//   • Each zone is colored by its CURRENT role: green support while price trades
+//     above it, red resistance while price trades below — a broken level flips role.
+//   • The oldest un-retested zones are pruned so only the most relevant ones remain.
+// ════════════════════════════════════════════════════════════════════════════════
+phSR = ta.pivothigh(high, srLeft, srRight)
+plSR = ta.pivotlow(low,  srLeft, srRight)
+
+var array<float> srPx   = array.new<float>()
+var array<float> srHalf = array.new<float>()
+var array<int>   srHits = array.new<int>()
+var array<int>   srBar  = array.new<int>()
+var array<box>   srBx   = array.new<box>()
+var array<label> srLb   = array.new<label>()
+
+srBrokeUp = false
+srBrokeDn = false
+
+if showSR and not na(atr14)
+    float half  = atr14 * srZoneAtr
+    float mDist = atr14 * srMergeAtr
+
+    // 1) register this bar's confirmed pivot(s): reinforce a nearby zone, else add one
+    candPx = array.new<float>()
+    if not na(phSR)
+        array.push(candPx, phSR)
+    if not na(plSR)
+        array.push(candPx, plSR)
+    if array.size(candPx) > 0
+        for c = 0 to array.size(candPx) - 1
+            px = array.get(candPx, c)
+            nearIdx = -1
+            float nearDst = na
+            if array.size(srPx) > 0
+                for i = 0 to array.size(srPx) - 1
+                    d = math.abs(array.get(srPx, i) - px)
+                    if d <= mDist and (na(nearDst) or d < nearDst)
+                        nearDst := d
+                        nearIdx := i
+            if nearIdx >= 0
+                array.set(srHits, nearIdx, array.get(srHits, nearIdx) + 1)
+                array.set(srBar,  nearIdx, bar_index)
+            else
+                box   nb = box.new(bar_index - srRight, px + half, bar_index, px - half, border_color=color.new(color.gray, 45), bgcolor=color.new(color.gray, 82))
+                label nl = label.new(bar_index, px, "", style=label.style_label_left, textcolor=color.white, color=color.new(color.gray, 100), size=size.small)
+                array.push(srPx,   px)
+                array.push(srHalf, half)
+                array.push(srHits, 1)
+                array.push(srBar,  bar_index)
+                array.push(srBx,   nb)
+                array.push(srLb,   nl)
+
+    // 2) prune the oldest un-retested zone(s) beyond the cap
+    while array.size(srPx) > srMaxLevels
+        oldIdx = 0
+        oldBar = array.get(srBar, 0)
+        for i = 1 to array.size(srPx) - 1
+            if array.get(srBar, i) < oldBar
+                oldBar := array.get(srBar, i)
+                oldIdx := i
+        box.delete(array.get(srBx, oldIdx))
+        label.delete(array.get(srLb, oldIdx))
+        array.remove(srPx,   oldIdx)
+        array.remove(srHalf, oldIdx)
+        array.remove(srHits, oldIdx)
+        array.remove(srBar,  oldIdx)
+        array.remove(srBx,   oldIdx)
+        array.remove(srLb,   oldIdx)
+
+    // 3) restyle + extend every active zone; flag a break when price closes through one
+    if array.size(srPx) > 0
+        for i = 0 to array.size(srPx) - 1
+            px = array.get(srPx, i)
+            hf = array.get(srHalf, i)
+            isSup = close >= px
+            col = isSup ? color.green : color.red
+            bx = array.get(srBx, i)
+            box.set_top(bx, px + hf)
+            box.set_bottom(bx, px - hf)
+            box.set_right(bx, bar_index + srExtend)
+            box.set_bgcolor(bx, color.new(col, 82))
+            box.set_border_color(bx, color.new(col, 45))
+            lb = array.get(srLb, i)
+            if srShowStrength
+                label.set_xy(lb, bar_index + srExtend, px)
+                label.set_text(lb, str.tostring(array.get(srHits, i)))
+                label.set_textcolor(lb, color.new(col, 0))
+                label.set_color(lb, color.new(col, 85))
+                label.set_style(lb, label.style_label_left)
+            else
+                label.set_text(lb, "")
+                label.set_color(lb, color.new(color.gray, 100))
+            if not na(close[1])
+                if close > px and close[1] <= px
+                    srBrokeUp := true
+                if close < px and close[1] >= px
+                    srBrokeDn := true
+
+// ════════════════════════════════════════════════════════════════════════════════
 // ALERTS  (create these in TradingView via Alerts → Condition: GemHunter v4)
 // ════════════════════════════════════════════════════════════════════════════════
 alertcondition(flipUp,   title="GemHunter ▲ Flip to Uptrend",   message="GemHunter: trend flipped to UPTREND — {{ticker}} {{interval}}")
@@ -260,3 +373,5 @@ alertcondition(gatedBull and not gatedBull[1], title="GemHunter • LTF Bullish 
 alertcondition(gatedBear and not gatedBear[1], title="GemHunter • LTF Bearish (gated)", message="GemHunter: gated BEARISH signal — {{ticker}} {{interval}}")
 alertcondition(useHTF and htfBull and not htfBull[1], title="GemHunter • HTF turned Bullish", message="GemHunter: higher timeframe BULLISH — {{ticker}} {{interval}}")
 alertcondition(useHTF and htfBear and not htfBear[1], title="GemHunter • HTF turned Bearish", message="GemHunter: higher timeframe BEARISH — {{ticker}} {{interval}}")
+alertcondition(srBrokeUp, title="GemHunter • Broke a Level (up)",   message="GemHunter: price closed UP through an S/R level — {{ticker}} {{interval}}")
+alertcondition(srBrokeDn, title="GemHunter • Broke a Level (down)", message="GemHunter: price closed DOWN through an S/R level — {{ticker}} {{interval}}")
